@@ -469,3 +469,39 @@ npm start
 
 Alternativa via API: suba o gerador (`--launch-profile http`, porta 5080) e chame
 `POST /api/generation` conforme a seção 6.
+
+
+ULTIMA VERSÃO
+Summary of Changes
+1. Modified CodeGenerator.cs 
+Changed the frontend generation to produce only sakai-ng compatible feature files instead of a complete standalone Angular project.
+2. Created 6 New Templates for sakai-ng Integration:
+Template	Output Path	Description
+sakai-model.tpl	src/app/pages/{feature}/models/{feature}.model.ts	TypeScript interfaces (Entity, CreateRequest, UpdateRequest, PagedResult)
+sakai-service.tpl	src/app/pages/{feature}/services/{feature}.service.ts	Angular service with signals for reactive state
+sakai-crud-ts.tpl	src/app/pages/{feature}/{feature}.ts	Main CRUD component (table + inline dialog)
+sakai-crud-html.tpl	src/app/pages/{feature}/{feature}.html	PrimeNG table with filtering, sorting, pagination
+sakai-crud-scss.tpl	src/app/pages/{feature}/{feature}.scss	Component styles
+sakai-crud-routes.tpl	src/app/pages/{feature}/{feature}.routes.ts	Lazy-loaded routes for sakai-ng integration
+3. Key Features of the Generated CRUD Component:
+- PrimeNG Table with global search, column filters, sorting, pagination
+- Toolbar with New, Delete Selected, Export CSV actions
+- Inline Dialog for Create/Edit (following sakai-ng's crud.ts pattern)
+- Dynamic Form Fields based on database column types:
+- Text/textarea inputs
+- Number/currency inputs
+- Date/DateTime pickers
+- Checkboxes for booleans
+- Select dropdowns for enums
+- Foreign key selects (loaded via HTTP)
+- Confirmation Dialogs for delete operations
+- Toast Messages for success/error feedback
+- Signal-based State for reactive UI updates
+4. Integration with sakai-ng:
+The generated feature module can be added to sakai-ng by:
+1. Copying the generated src/app/pages/{feature}/ folder to sakai-ng's src/app/pages/
+2. Adding a lazy-loaded route in sakai-ng's routing (e.g., { path: 'feature', loadChildren: () => import('./pages/feature/feature.routes') })
+To Test:
+Configure a MySQL connection string in src/GeradorCodigo.Api/appsettings.json and run:
+dotnet run --project src/GeradorCodigo.Api -- --table SUA_TABELA --overwrite
+The build compiles successfully. The old templates (list-ts, list-html, list-scss, form-ts, form-html, form-scss, app-routes, app-config, etc.) are still present but no longer used by the generator.

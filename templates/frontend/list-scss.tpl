@@ -45,29 +45,20 @@
 }
 
 .list-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   min-height: 3.35rem;
   padding: 0.55rem 0.75rem;
   border-bottom: 1px solid var(--list-border);
 }
 
-.list-search {
-  position: relative;
-  display: block;
-  width: 11rem;
+.list-toolbar ::ng-deep .p-iconfield {
+  width: 14rem;
 }
 
-.list-search > i {
-  position: absolute;
-  top: 50%;
-  left: 0.75rem;
-  z-index: 1;
-  color: #7b899c;
-  font-size: 0.75rem;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.list-search input {
+.list-toolbar ::ng-deep .p-iconfield input {
   width: 100%;
   height: 1.9rem;
   padding: 0.4rem 0.75rem 0.4rem 2.15rem;
@@ -77,12 +68,17 @@
   border-radius: 4px;
 }
 
-.list-search input::placeholder {
+.list-toolbar ::ng-deep .p-iconfield input::placeholder {
   color: #7a8799;
 }
 
-.list-search input::-webkit-search-cancel-button {
-  display: none;
+.list-toolbar ::ng-deep .p-iconfield .p-inputicon {
+  left: 0.75rem;
+  color: #7b899c;
+}
+
+.list-toolbar ::ng-deep .p-iconfield .p-inputicon i {
+  font-size: 0.75rem;
 }
 
 .list-table-scroll {
@@ -150,6 +146,53 @@
   height: 0.7rem;
   margin: 0;
   color: #748296;
+}
+
+.column-tools ::ng-deep .p-column-filter {
+  display: inline-flex;
+  align-items: center;
+}
+
+.column-tools ::ng-deep .p-column-filter-menu-button {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: #748296;
+  border-radius: 4px;
+}
+
+.column-tools ::ng-deep .p-column-filter-menu-button:hover {
+  color: #059669;
+  background: #e4f8f1;
+}
+
+.column-tools ::ng-deep .p-column-filter-menu-button.p-column-filter-menu-button-active,
+.column-tools ::ng-deep .p-column-filter-menu-button.p-column-filter-menu-button-open {
+  color: #059669;
+  background: #e4f8f1;
+}
+
+.column-tools ::ng-deep .p-column-filter-menu {
+  min-width: 12rem;
+}
+
+.column-tools ::ng-deep .p-column-filter-constraint {
+  padding: 0.5rem 0.75rem;
+}
+
+.column-tools ::ng-deep .p-column-filter-constraint .p-dropdown,
+.column-tools ::ng-deep .p-column-filter-constraint .p-inputtext,
+.column-tools ::ng-deep .p-column-filter-constraint .p-multiselect {
+  width: 100%;
+  font-size: 0.75rem;
+}
+
+.column-tools ::ng-deep .p-column-filter-constraint .p-slider {
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.column-tools ::ng-deep .p-column-filter-clear-button {
+  margin-top: 0.5rem;
 }
 
 .value-tag {
@@ -267,7 +310,7 @@
     flex-wrap: wrap;
   }
 
-  .list-search {
+  .list-toolbar ::ng-deep .p-iconfield {
     width: 100%;
   }
 }

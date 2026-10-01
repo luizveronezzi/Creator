@@ -47,29 +47,23 @@ public sealed class CodeGenerator(ITemplateEngine templateEngine) : ICodeGenerat
         Add("backend/endpoints", $"Backend/{prefix}.Api/Endpoints/{plan.EntityName}Endpoints.cs");
         Add("backend/graphql-query", $"Backend/{prefix}.Api/GraphQL/{plan.EntityName}Query.cs");
 
-        // -------------------------------------------------------------- Frontend
-        Add("frontend/package-json", $"Frontend/package.json");
-        Add("frontend/angular-json", $"Frontend/angular.json");
-        Add("frontend/tsconfig", $"Frontend/tsconfig.json");
-        Add("frontend/tsconfig-app", $"Frontend/tsconfig.app.json");
-        Add("frontend/index-html", $"Frontend/src/index.html");
-        Add("frontend/main-ts", $"Frontend/src/main.ts");
-        Add("frontend/styles-scss", $"Frontend/src/styles.scss");
-        Add("frontend/app-component-ts", $"Frontend/src/app/app.component.ts");
-        Add("frontend/app-component-html", $"Frontend/src/app/app.component.html");
-        Add("frontend/app-component-scss", $"Frontend/src/app/app.component.scss");
-        Add("frontend/app-config", $"Frontend/src/app/app.config.ts");
-        Add("frontend/app-routes", $"Frontend/src/app/app.routes.ts");
-        Add("frontend/proxy-conf", $"Frontend/proxy.conf.json");
-        Add("frontend/theme", $"Frontend/src/app/core/theme.ts");
-        Add("frontend/model", $"Frontend/src/app/{feature}/models/{feature}.model.ts");
-        Add("frontend/service", $"Frontend/src/app/{feature}/services/{feature}.service.ts");
-        Add("frontend/list-ts", $"Frontend/src/app/{feature}/pages/{feature}-list/{feature}-list.component.ts");
-        Add("frontend/list-html", $"Frontend/src/app/{feature}/pages/{feature}-list/{feature}-list.component.html");
-        Add("frontend/list-scss", $"Frontend/src/app/{feature}/pages/{feature}-list/{feature}-list.component.scss");
-        Add("frontend/form-ts", $"Frontend/src/app/{feature}/pages/{feature}-form/{feature}-form.component.ts");
-        Add("frontend/form-html", $"Frontend/src/app/{feature}/pages/{feature}-form/{feature}-form.component.html");
-        Add("frontend/form-scss", $"Frontend/src/app/{feature}/pages/{feature}-form/{feature}-form.component.scss");
+        // -------------------------------------------------------------- Frontend (sakai-ng compatible)
+        // Gera apenas arquivos de feature para integração com o projeto sakai-ng existente
+        // Estrutura: src/app/pages/{feature}/{feature}.ts (crud-style component)
+        //            src/app/pages/{feature}/{feature}.html (template)
+        //            src/app/pages/{feature}/{feature}.scss (styles)
+        //            src/app/pages/{feature}/{feature}.routes.ts (lazy-loaded routes)
+        //            src/app/pages/{feature}/models/{feature}.model.ts
+        //            src/app/pages/{feature}/services/{feature}.service.ts
+
+        var featurePath = $"src/app/pages/{feature}";
+
+        Add("frontend/sakai-model", $"{featurePath}/models/{feature}.model.ts");
+        Add("frontend/sakai-service", $"{featurePath}/services/{feature}.service.ts");
+        Add("frontend/sakai-crud-ts", $"{featurePath}/{feature}.ts");
+        Add("frontend/sakai-crud-html", $"{featurePath}/{feature}.html");
+        Add("frontend/sakai-crud-scss", $"{featurePath}/{feature}.scss");
+        Add("frontend/sakai-crud-routes", $"{featurePath}/{feature}.routes.ts");
 
         return new FileSet(root, files);
     }

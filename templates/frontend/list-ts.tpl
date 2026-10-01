@@ -1,14 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { SelectModule } from 'primeng/select';
+import { SliderModule } from 'primeng/slider';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { [[EntityPlural]] } from '../../models/[[FeatureName]].model';
@@ -27,11 +32,18 @@ import { [[EntityPlural]]Service } from '../../services/[[FeatureName]].service'
     InputTextModule,
     ToastModule,
     ConfirmDialogModule,
+    IconFieldModule,
+    InputIconModule,
+    MultiSelectModule,
+    SelectModule,
+    SliderModule,
   ],
   templateUrl: './[[FeatureName]]-list.component.html',
   styleUrl: './[[FeatureName]]-list.component.scss',
 })
 export class [[EntityPlural]]ListComponent implements OnInit {
+  @ViewChild('dt') dt!: Table;
+
   readonly service = inject([[EntityPlural]]Service);
 
   private readonly router = inject(Router);
@@ -45,6 +57,15 @@ export class [[EntityPlural]]ListComponent implements OnInit {
   readonly firstRecordIndex = signal(0);
   readonly sortField = signal<string | undefined>(undefined);
   readonly sortOrder = signal(0);
+
+  readonly globalFilterFields: string[] = [
+[[#each ListFields]]    '[[TsProperty]]',
+[[/each]]
+  ];
+[[#each ListFields]][[#if IsEnum]]  readonly [[TsProperty]]Options = [
+[[#each EnumValues]]    { label: '[[.]]', value: '[[.]]' },
+[[/each]]  ];
+[[/if]][[/each]]
 
   private readonly successTags = new Set([
     'active',
@@ -104,6 +125,19 @@ export class [[EntityPlural]]ListComponent implements OnInit {
   }
 
   clearFilters(): void {
+    this.searchText.set('');
+    this.sortField.set(undefined);
+    this.sortOrder.set(0);
+    this.firstRecordIndex.set(0);
+    this.loadPage(1);
+  }
+
+  onGlobalFilter(event: Event): void {
+    this.dt.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  clearTable(): void {
+    this.dt.clear();
     this.searchText.set('');
     this.sortField.set(undefined);
     this.sortOrder.set(0);

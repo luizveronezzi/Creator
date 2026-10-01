@@ -11,31 +11,9 @@
   </div>
 
   <div class="list-card">
-    <div class="list-toolbar">
-      <p-button
-        label="Limpar"
-        icon="pi pi-filter"
-        severity="success"
-        [outlined]="true"
-        size="small"
-        (onClick)="clearFilters()"
-      />
-
-      <label class="list-search">
-        <i class="pi pi-search" aria-hidden="true"></i>
-        <input
-          pInputText
-          type="search"
-          placeholder="Buscar palavra-chave"
-          aria-label="Buscar palavra-chave"
-          [ngModel]="searchText()"
-          (ngModelChange)="onSearchChange($event)"
-        />
-      </label>
-    </div>
-
     <div class="list-table-scroll">
       <p-table
+        #dt
         [value]="service.items()"
         [lazy]="true"
         [lazyLoadOnInit]="false"
@@ -43,17 +21,55 @@
         [sortField]="sortField()"
         [sortOrder]="sortOrder()"
         [resetPageOnSort]="true"
+        [globalFilterFields]="globalFilterFields"
+        [paginator]="false"
         (onLazyLoad)="onLazyLoad($event)"
         class="list-data-table"
       >
+        <ng-template pTemplate="caption">
+          <div class="list-toolbar">
+            <p-button
+              label="Limpar"
+              icon="pi pi-filter-slash"
+              severity="success"
+              [outlined]="true"
+              size="small"
+              (onClick)="clearTable()"
+            />
+
+            <p-iconfield iconPosition="left">
+              <p-inputicon>
+                <i class="pi pi-search"></i>
+              </p-inputicon>
+              <input
+                pInputText
+                type="text"
+                (input)="onGlobalFilter($event)"
+                placeholder="Buscar palavra-chave"
+                aria-label="Buscar palavra-chave"
+              />
+            </p-iconfield>
+          </div>
+        </ng-template>
+
         <ng-template pTemplate="header">
           <tr>
 [[#each ListFields]]            <th pSortableColumn="[[ParamName]]" class="list-header-cell">
               <div class="column-heading">
                 <span>[[DisplayName]]</span>
                 <span class="column-tools">
-                  <i class="pi pi-filter list-filter-icon" aria-hidden="true"></i>
-[[#if IsSortable]]                  <p-sortIcon field="[[ParamName]]" />[[/if]]                </span>
+[[#if IsBoolean]]                  <p-columnFilter type="boolean" field="[[TsProperty]]" display="menu" />
+[[/if]][[#if IsEnum]]                  <p-columnFilter field="[[TsProperty]]" matchMode="equals" display="menu">
+                    <ng-template #filter let-value let-filter="filterCallback">
+                      <p-select [ngModel]="value" [options]="[[TsProperty]]Options" (onChange)="filter($event.value)" placeholder="Any" />
+                    </ng-template>
+                  </p-columnFilter>
+[[/if]][[#if IsDecimal]]                  <p-columnFilter type="numeric" field="[[TsProperty]]" display="menu" />
+[[/if]][[#if IsDate]]                  <p-columnFilter type="date" field="[[TsProperty]]" display="menu" placeholder="dd/mm/yyyy" />
+[[/if]][[#if IsFullDateTime]]                  <p-columnFilter type="date" field="[[TsProperty]]" display="menu" placeholder="dd/mm/yyyy" />
+[[/if]][[#if IsPlainListField]]                  <p-columnFilter type="text" field="[[TsProperty]]" display="menu" placeholder="Buscar..." />
+[[/if]][[#if IsSortable]]                  <p-sortIcon field="[[ParamName]]" />
+[[/if]]                </span>
               </div>
             </th>
 [[/each]]            <th class="actions-column list-header-cell">Ações</th>
