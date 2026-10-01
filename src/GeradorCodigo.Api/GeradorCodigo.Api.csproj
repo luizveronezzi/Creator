@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeradorCodigo.Application\GeradorCodigo.Application.csproj" />
+    <ProjectReference Include="..\GeradorCodigo.Infrastructure\GeradorCodigo.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!-- Copia os templates para o diretório de saída (publicação). -->
+  <ItemGroup>
+    <None Include="..\..\templates\**\*" LinkBase="templates" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

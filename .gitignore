@@ -1,0 +1,19 @@
+# .NET
+bin/
+obj/
+*.user
+.vs/
+artifacts/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# Saída da geração (opcional — remova para versionar o código gerado)
+Generated/
+
+# Sistema
+Thumbs.db
+.DS_Store
